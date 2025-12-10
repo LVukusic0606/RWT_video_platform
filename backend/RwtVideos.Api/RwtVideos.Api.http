@@ -1,0 +1,6 @@
+@RwtVideos.Api_HostAddress = http://localhost:5089
+
+GET {{RwtVideos.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/RwtVideos.Api.props" />
+</Project>
