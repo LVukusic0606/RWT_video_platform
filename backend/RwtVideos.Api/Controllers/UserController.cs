@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using RwtVideos.Api.Models;
 using RwtVideos.Api.DTOs;
-using System.Collections.Generic;
+using RwtVideos.Api.Services;
 
 namespace RwtVideos.Api.Controllers
 {
@@ -9,21 +8,18 @@ namespace RwtVideos.Api.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private static List<User> users = new List<User>();
-        private static int nextId = 1;
+        
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterUserDto dto)
+        public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
         {
-            var newUser = new User
-            {
-                Id = nextId++,
-                Name = dto.Name,
-                Email = dto.Email,
-                IsApproved = false
-            };
-
-            users.Add(newUser);
+            await _userService.RegisterAsync(dto.Name, dto.Email, dto.Password);
 
             return Ok(new
             {
@@ -31,28 +27,35 @@ namespace RwtVideos.Api.Controllers
             });
         }
 
-        [HttpGet("pending")]
-        public IActionResult GetPendingUsers()
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
-            var pendingUsers = users.Where(u => !u.IsApproved).ToList();
+            var auth = await _userService.LoginAsync(dto.Email, dto.Password);
+            if (auth == null) return Unauthorized("Neispravan email ili lozinka");
+
+            return Ok(auth);
+        }
+
+        [HttpGet("pending")]
+        public async Task<IActionResult> GetPendingUsers()
+        {
+            var pendingUsers = await _userService.GetPendingAsync();
             return Ok(pendingUsers);
         }
 
         [HttpPost("approve/{id}")]
-        public IActionResult ApproveUser(int id)
+        public async Task<IActionResult> ApproveUser(int id)
         {
-            var user = users.FirstOrDefault(u => u.Id == id);
+            var approved = await _userService.ApproveAsync(id);
 
-            if (user == null) 
+            if (!approved)
             {
-                return NotFound("Korisnik nije pronađen.");
+                return NotFound("Korisnik nije pronađen");
             }
-
-            user.IsApproved = true;
 
             return Ok(new
             {
-                message = $"Korisnik {user.Name} je odobren"
+                message = $"Korisnik je odobren"
             });
         }
     }
