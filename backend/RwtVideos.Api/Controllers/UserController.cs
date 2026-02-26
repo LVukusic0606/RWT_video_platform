@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RwtVideos.Api.DTOs;
 using RwtVideos.Api.Services;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace RwtVideos.Api.Controllers
 {
@@ -60,6 +62,26 @@ namespace RwtVideos.Api.Controllers
             {
                 message = $"Korisnik je odobren"
             });
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var name = User.FindFirstValue("name");
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            var isApproved = User.FindFirstValue("isApproved");
+
+            return Ok(new
+            {
+                UserId = userId,
+                Name = name,
+                Email = email,
+                Role = role,
+                IsApproved = isApproved
+            }); 
         }
     }
 }
