@@ -7,5 +7,6 @@ namespace RwtVideos.Api.Models
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public bool IsApproved { get; set; }
+        public string Role { get; set; } = "User";
     }
 }

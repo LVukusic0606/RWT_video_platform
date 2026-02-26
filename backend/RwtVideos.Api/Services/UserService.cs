@@ -27,7 +27,8 @@ namespace RwtVideos.Api.Services
             {
                 Name = name,
                 Email = email,
-                IsApproved = false    
+                IsApproved = false,
+                Role = "User"    
             };
 
             newUser.PasswordHash = _passwordHasher.HashPassword(newUser, password);

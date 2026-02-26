@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RwtVideos.Api.DTOs;
 using RwtVideos.Api.Services;
@@ -36,6 +37,7 @@ namespace RwtVideos.Api.Controllers
             return Ok(auth);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("pending")]
         public async Task<IActionResult> GetPendingUsers()
         {
@@ -43,6 +45,7 @@ namespace RwtVideos.Api.Controllers
             return Ok(pendingUsers);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("approve/{id}")]
         public async Task<IActionResult> ApproveUser(int id)
         {

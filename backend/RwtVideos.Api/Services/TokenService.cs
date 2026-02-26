@@ -43,7 +43,9 @@ namespace RwtVideos.Api.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("name", user.Name)
+                new Claim("name", user.Name),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("isApproved", user.IsApproved.ToString())
             };
 
             var token = new JwtSecurityToken(
