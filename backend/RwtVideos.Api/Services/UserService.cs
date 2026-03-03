@@ -26,9 +26,7 @@ namespace RwtVideos.Api.Services
             var newUser = new User
             {
                 Name = name,
-                Email = email,
-                IsApproved = false,
-                Role = "User"    
+                Email = email
             };
 
             newUser.PasswordHash = _passwordHasher.HashPassword(newUser, password);
@@ -67,7 +65,7 @@ namespace RwtVideos.Api.Services
         {
             var user = await _userRepository.GetByIdAsync(id);
 
-            if (user == null)
+            if (user == null || user.IsApproved)
             {
                 return false;
             }

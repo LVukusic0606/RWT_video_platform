@@ -5,8 +5,6 @@ using RwtVideos.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Identity;
-using RwtVideos.Api.Models;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,7 +56,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Unesi JWT token ovako: Bearer {tvoj_token}"
+        Description = "JWT Authorization header usin the Bearer scheme"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -79,40 +77,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var db = services.GetRequiredService<ApplicationDbContext>();
-    await db.Database.MigrateAsync();
-
-    var seedSection = app.Configuration.GetSection("SeedAdmin");
-    var seedEmail = seedSection["Email"];
-    var seedName = seedSection["Name"];
-    var seedPassword = seedSection["Password"];
-
-    if (!string.IsNullOrWhiteSpace(seedEmail) &&
-        !string.IsNullOrWhiteSpace(seedPassword) &&
-        !string.IsNullOrWhiteSpace(seedName))
-    {
-        var adminExists = await db.Users.AnyAsync(u => u.Email == seedEmail);
-        if (!adminExists)
-        {
-            var admin = new User
-            {
-                Name = seedName,
-                Email = seedEmail,
-                IsApproved = true,
-                Role = "Admin"
-            };
-
-            var hasher = new PasswordHasher<User>();
-            admin.PasswordHash = hasher.HashPassword(admin, seedPassword);
-
-            db.Users.Add(admin);
-            await db.SaveChangesAsync();
-        }
-    }
-}
+await DbSeeder.SeedAsync(app.Services, app.Configuration);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -22,6 +22,8 @@ namespace RwtVideos.Api.Services
 
         public string CreateToken(User user)
         {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
             var jwtSection = _configuration.GetSection("Jwt");
 
             var keyString = jwtSection["Key"];
@@ -31,10 +33,7 @@ namespace RwtVideos.Api.Services
             var issuer = jwtSection["Issuer"];
             var audience = jwtSection["Audience"];
 
-            var expiresMinutesString = jwtSection["ExpiresMinutes"];
-            var expiresMinutes = 60;
-            if (int.TryParse(expiresMinutesString, out var parsed))
-                expiresMinutes = parsed;
+            var expiresMinutes = jwtSection.GetValue<int?>("ExpiresMinutes") ?? 60;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -42,8 +41,6 @@ namespace RwtVideos.Api.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("name", user.Name),
                 new Claim(ClaimTypes.Role, user.Role),
                 new Claim("isApproved", user.IsApproved.ToString())
             };

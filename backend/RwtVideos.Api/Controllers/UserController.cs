@@ -26,7 +26,7 @@ namespace RwtVideos.Api.Controllers
 
             return Ok(new
             {
-                message = "Korisnik registriran. Čeka odobrenje admina."
+                message = "User registered. Awaiting admin approval."
             });
         }
 
@@ -34,7 +34,7 @@ namespace RwtVideos.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             var auth = await _userService.LoginAsync(dto.Email, dto.Password);
-            if (auth == null) return Unauthorized("Neispravan email ili lozinka");
+            if (auth == null) return Unauthorized("Invalid email or password.");
 
             return Ok(auth);
         }
@@ -55,12 +55,12 @@ namespace RwtVideos.Api.Controllers
 
             if (!approved)
             {
-                return NotFound("Korisnik nije pronađen");
+                return NotFound("User not found or already approved.");
             }
 
             return Ok(new
             {
-                message = $"Korisnik je odobren"
+                message = $"User approved successfully."
             });
         }
 
@@ -69,16 +69,12 @@ namespace RwtVideos.Api.Controllers
         public IActionResult Me()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var email = User.FindFirstValue(ClaimTypes.Email);
-            var name = User.FindFirstValue("name");
             var role = User.FindFirstValue(ClaimTypes.Role);
             var isApproved = User.FindFirstValue("isApproved");
 
             return Ok(new
             {
                 UserId = userId,
-                Name = name,
-                Email = email,
                 Role = role,
                 IsApproved = isApproved
             }); 

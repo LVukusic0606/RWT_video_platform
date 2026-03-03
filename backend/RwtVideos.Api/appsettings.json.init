@@ -1,0 +1,19 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=rwt_videos;Username=rwt_user;Password=CHANGE_ME"
+  },
+  "Jwt": {
+    "Key": "CHANGE_ME",
+    "Issuer": "RwtVideosApi",
+    "Audience": "RwtVideosApiClient",
+    "ExpiresMinutes": 60
+  }
+}
