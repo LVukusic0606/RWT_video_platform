@@ -10,7 +10,6 @@ namespace RwtVideos.Api.Data
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
-            // učitava appsettings.json
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
