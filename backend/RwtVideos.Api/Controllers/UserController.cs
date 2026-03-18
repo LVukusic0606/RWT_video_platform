@@ -68,7 +68,8 @@ namespace RwtVideos.Api.Controllers
         [HttpGet("me")]
         public IActionResult Me()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             var role = User.FindFirstValue(ClaimTypes.Role);
             var isApproved = User.FindFirstValue("isApproved");
 

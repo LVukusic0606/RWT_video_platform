@@ -1,5 +1,7 @@
 backend/RwtVideos.Api/bin/
 backend/RwtVideos.Api/obj/
 
+backend/RwtVideos.Api/Storage/
+
 backend/RwtVideos.Api/appsettings.json
 backend/RwtVideos.Api/appsettings.Development.json

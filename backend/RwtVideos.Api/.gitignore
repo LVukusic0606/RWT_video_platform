@@ -1,5 +1,7 @@
 bin/
 obj/
 
+Storage/
+
 appsettings.json
 appsettings.Development.json

@@ -15,5 +15,9 @@
     "Issuer": "RwtVideosApi",
     "Audience": "RwtVideosApiClient",
     "ExpiresMinutes": 60
+  },
+  "VideoStorage": {
+    "RootPath": "Storage/Videos",
+    "MaxFileSizeMB": 500
   }
 }

@@ -14,8 +14,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container.
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IVideoService, VideoService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddSingleton<IVideoStorageService, VideoStorageService>();
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
